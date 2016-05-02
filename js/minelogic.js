@@ -6,7 +6,7 @@ function generate_minefield(width, height, mines) {
         return;
     }
 
-    $("#status").html="";
+    $("#status").html = "";
     $("#minefield").html("<table border=\"1\" id=\"minetable\"></table>")
 
     // Create a table of height rows
@@ -26,27 +26,33 @@ function generate_minefield(width, height, mines) {
         var y = Math.floor(Math.random() * height);
 
         // Append mine to the cell so we can look for it when we click
-        if ($("#" + x + "_" + y +" div").length == 0) {
+        if ($("#" + x + "_" + y + " div").length == 0) {
             $("#" + x + "_" + y).append("<div class=\"mine\"></div>");
         } else {
-          console.log("Mine already present");
-          mine--;
+            console.log("Mine already present");
+            mine--;
         }
     }
 }
 
 function mine_click(e) {
-   // Check to see if the mine is present
-   if($("#" + e.target.id + " div").length) {
-      // game over clear map
-      $("#status").html="<blink>You lose</blink>";
-      minefield_expose();
-   }
- }
+    // Check to see if the mine is present
+    if ($("#" + e.target.id + " div").length > 0 ) {
+        // game over clear map
+        $("#status").html("<blink>You lose</blink>");
+        minefield_expose();
+    } else {
+      //minefield_miss();
+    }
+}
 
 function minefield_expose() {
-  var cells = $(".cell");
-  for (var cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-    console.log(cells[cellIndex]);
-  }
+    var cells = $(".cell");
+    for (var cellIndex = 0; cellIndex < cells.length; cellIndex++) {
+        if ($("#" + cells[cellIndex].id + " div").length == 0) {
+            $("#" + cells[cellIndex].id).html("&nbsp;");
+        } else {
+            $("#" + cells[cellIndex].id).html("💣");
+        }
+    }
 }
