@@ -34,7 +34,7 @@ function generate_minefield(width, height, mines) {
         }
     }
 
-    remainingCells = width*height-mines;
+    remainingCells = width * height - mines;
 
 }
 
@@ -51,13 +51,19 @@ function mine_click(e) {
         remainingCells--;
 
         if (mine_count == 0) {
+          // guarantees at at least all squares around will not be a mine
+           for (var x = target[0]-1; x <= target[0]+1; x++) {
+             for (var y = target[1]-1; y <= target[1]+1; y++) {
+               minefield_expose_cell_by_id(x+"_"+y);
+             }
+           }
             // find other cells with zero and expose them.
         }
 
         console.log("Remaining Cells = " + remainingCells)
         if (remainingCells == 0) {
-          $("#status").html("<blink>You win</blink>");
-          minefield_expose();
+            $("#status").html("<blink>You win</blink>");
+            minefield_expose();
         }
     }
 }
@@ -120,7 +126,7 @@ function minefield_cell(x, y) {
     //console.log("getting value for cell " + x + "," + y)
 
     if ($("#" + x + "_" + y + " div").length > 0) {
-  //      console.log("cell " + x + "," + y + " is a bomb");
+        //      console.log("cell " + x + "," + y + " is a bomb");
         return -1;
     } else {
         var mine_count = 0;
@@ -129,8 +135,8 @@ function minefield_cell(x, y) {
                 // Rather than doing an explicit bounds check, rely on the jquery
                 // selector to detect bordering mines
                 if ($("#" + column + "_" + row + " div").length > 0) {
-//                    console.log("Adjacent cell " + column + "," + row +
-//                        " for " + x + "," + y + " contains mine");
+                    //                    console.log("Adjacent cell " + column + "," + row +
+                    //                        " for " + x + "," + y + " contains mine");
                     mine_count++;
                 }
             }
