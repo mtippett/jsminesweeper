@@ -37,7 +37,7 @@ function generate_minefield(width, height, mines) {
 
 function mine_click(e) {
     // Check to see if the mine is present
-    if ($("#" + e.target.id + " div").length > 0 ) {
+    if ($("#" + e.target.id + " div").length > 0) {
         // game over clear map
         $("#status").html("<blink>You lose</blink>");
         minefield_expose();
@@ -46,21 +46,65 @@ function mine_click(e) {
         var target = e.target.id.split("_");
 
         // should handle an invalid target
-        minefield_miss(target[0],target[1]);
+        minefield_miss(target[0], target[1]);
     }
 }
 
 function minefield_expose() {
     var cells = $(".cell");
     for (var cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-        if ($("#" + cells[cellIndex].id + " div").length == 0) {
-            $("#" + cells[cellIndex].id).html("&nbsp;");
+      var id = cells[cellIndex].id;
+      $("#" + id).html(minefield_cell_by_id(id));
+
+    }
+}
+
+function minefield_cell_by_id(id) {
+  var target = id.split("_");
+
+  if(target.length < 2) {
+    return "error";
+  } else {
+    return minefield_cell(target[0],target[1]);
+  }
+}
+
+function minefield_cell(x, y) {
+
+   x = parseInt(x,10);
+   y = parseInt(y,10);
+
+   console.log("getting value for cell "+x+","+y)
+
+    if ($("#" + x + "_" + y + " div").length > 0) {
+        console.log("cell "+x+","+y+" is a bomb");
+        return "💣<div class=\"mine\"></div>";
+    } else {
+        var mine_count = 0;
+        for (var column = x - 1; column <= x + 1; column++) {
+            for (var row = y - 1; row <= y + 1; row++) {
+                // Rather than doing an explicit bounds check, rely on the jquery
+                // selector to detect bordering mines
+                console.log("checking "+column+","+row);
+                if ($("#" + column + "_" + row + " div").length > 0) {
+                    console.log("Adjacent cell "+column+","+row +
+                          " for "+x+","+y+" contains mine");
+                    mine_count++;
+                }
+            }
+        }
+
+        if (mine_count > 0) {
+            return mine_count;
         } else {
-            $("#" + cells[cellIndex].id).html("💣");
+            return "&nbsp;";
         }
     }
 }
 
-function minefield_miss(x,y) {
-  $("#"+x+"_"+y).html("&nbsp;");
+function minefield_miss(x, y) {
+    // Scan surrounding cells for mines
+
+    $("#" + x+"_"+y).html(minefield_cell(x,y));
+
 }
