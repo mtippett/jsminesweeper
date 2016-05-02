@@ -42,7 +42,11 @@ function mine_click(e) {
         $("#status").html("<blink>You lose</blink>");
         minefield_expose();
     } else {
-      //minefield_miss();
+        //decode the target cell
+        var target = e.target.id.split("_");
+
+        // should handle an invalid target
+        minefield_miss(target[0],target[1]);
     }
 }
 
@@ -55,4 +59,8 @@ function minefield_expose() {
             $("#" + cells[cellIndex].id).html("💣");
         }
     }
+}
+
+function minefield_miss(x,y) {
+  $("#"+x+"_"+y).html("&nbsp;");
 }
