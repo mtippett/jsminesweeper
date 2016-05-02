@@ -12,19 +12,19 @@
             <tr>
                 <td>Width</td>
                 <td>
-                    <input type="text" id="width" value="10"/>
+                    <input type="text" id="width" value="2"/>
                 </td>
             </tr>
             <tr>
                 <td>Height</td>
                 <td>
-                    <input type="text" id="height" value ="10"/>
+                    <input type="text" id="height" value ="2"/>
                 </td>
             </tr>
             <tr>
                 <td>Mines</td>
                 <td>
-                    <input type="text" id="mines" value="10"/>
+                    <input type="text" id="mines" value="3"/>
                 </td>
             </tr>
             <tr>
@@ -36,13 +36,13 @@
         </table>
     </form>
 
+    <p id="status"></p>
+
 <script>
    $("#generate").click(function () {
      console.log("Generating "+$("#width").val()+"x"+$("#height").val()+" with "+
           $("#mines").val()+" mines");
      generate_minefield($("#width").val(),$("#height").val(),$("#mines").val());
-
-     return false;
    });
 </script>
 
