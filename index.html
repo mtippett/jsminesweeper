@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <title>Javascript/JS Minesweeper</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="js/minelogic.js"></script>
+</head>
+
+<body>
+    <form id="form">
+        <table>
+            <tr>
+                <td>Width</td>
+                <td>
+                    <input type="text" id="width" value="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td>
+                    <input type="text" id="height" value ="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Mines</td>
+                <td>
+                    <input type="text" id="mines" value="10"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Generate</td>
+                <td>
+                    <button type="button" id="generate">Generate Minefield</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+<script>
+   $("#generate").click(function () {
+     console.log("Generating "+$("#width").val()+"x"+$("#height").val()+" with "+
+          $("#mines").val()+" mines");
+     generate_minefield($("#width").val(),$("#height").val(),$("#mines").val());
+
+     return false;
+   });
+</script>
+
+<div id="minefield">
+</div>
+
+
+</body>
+
+</html>
