@@ -6,7 +6,7 @@ function generate_minefield(width, height, mines) {
         return;
     }
 
-    $("#status").html = "";
+    $("#status").html("");
     $("#minefield").html("<table border=\"1\" id=\"minetable\"></table>")
 
     // Create a table of height rows
@@ -33,62 +33,104 @@ function generate_minefield(width, height, mines) {
             mine--;
         }
     }
+
+    remainingCells = width*height-mines;
+
 }
 
 function mine_click(e) {
-    // Check to see if the mine is present
-    if ($("#" + e.target.id + " div").length > 0) {
-        // game over clear map
+
+    var target = minefield_parse_id(e.target.id);
+    var mine_count = minefield_cell(target[0], target[1]);
+
+    if (mine_count < 0) {
         $("#status").html("<blink>You lose</blink>");
         minefield_expose();
     } else {
-        //decode the target cell
-        var target = e.target.id.split("_");
+        minefield_expose_cell(target[0], target[1], mine_count);
+        remainingCells--;
 
-        // should handle an invalid target
-        minefield_miss(target[0], target[1]);
+        if (mine_count == 0) {
+            // find other cells with zero and expose them.
+        }
+
+        console.log("Remaining Cells = " + remainingCells)
+        if (remainingCells == 0) {
+          $("#status").html("<blink>You win</blink>");
+          minefield_expose();
+        }
     }
 }
 
 function minefield_expose() {
     var cells = $(".cell");
     for (var cellIndex = 0; cellIndex < cells.length; cellIndex++) {
-      var id = cells[cellIndex].id;
-      $("#" + id).html(minefield_cell_by_id(id));
-
+        var id = cells[cellIndex].id;
+        // Should check to see if the cell has already been exposed
+        minefield_expose_cell_by_id(id);
     }
 }
 
-function minefield_cell_by_id(id) {
-  var target = id.split("_");
+function minefield_expose_cell_by_id(id) {
+    var target = minefield_parse_id(id);
 
-  if(target.length < 2) {
-    return "error";
-  } else {
-    return minefield_cell(target[0],target[1]);
-  }
+    minefield_expose_cell(target[0], target[1], minefield_cell(target[0], target[1]));
+}
+
+function minefield_expose_cell(x, y, count) {
+    var content = "";
+
+    if (count < 0) {
+        content = "💣<div class=\"mine\"></div>";
+    } else if (count == 0) {
+        content = "&nbsp;";
+    } else {
+        content = count;
+    }
+
+    $("#" + x + "_" + y).html(content);
+    $("#" + x + "_" + y).off("click");
+
+
+}
+
+function minefield_parse_id(id) {
+
+    var target = id.split("_");
+    target[0] = parseInt(target[0], 10);
+    target[1] = parseInt(target[1], 10);
+
+    return target;
+
+}
+
+
+function minefield_cell_by_id(id) {
+    var target = minefield_parse_id(id);
+
+    if (target.length < 2) {
+        return "error";
+    } else {
+        return minefield_cell(target[0], target[1]);
+    }
 }
 
 function minefield_cell(x, y) {
 
-   x = parseInt(x,10);
-   y = parseInt(y,10);
-
-   console.log("getting value for cell "+x+","+y)
+    //console.log("getting value for cell " + x + "," + y)
 
     if ($("#" + x + "_" + y + " div").length > 0) {
-        console.log("cell "+x+","+y+" is a bomb");
-        return "💣<div class=\"mine\"></div>";
+  //      console.log("cell " + x + "," + y + " is a bomb");
+        return -1;
     } else {
         var mine_count = 0;
         for (var column = x - 1; column <= x + 1; column++) {
             for (var row = y - 1; row <= y + 1; row++) {
                 // Rather than doing an explicit bounds check, rely on the jquery
                 // selector to detect bordering mines
-                console.log("checking "+column+","+row);
                 if ($("#" + column + "_" + row + " div").length > 0) {
-                    console.log("Adjacent cell "+column+","+row +
-                          " for "+x+","+y+" contains mine");
+//                    console.log("Adjacent cell " + column + "," + row +
+//                        " for " + x + "," + y + " contains mine");
                     mine_count++;
                 }
             }
@@ -97,14 +139,7 @@ function minefield_cell(x, y) {
         if (mine_count > 0) {
             return mine_count;
         } else {
-            return "&nbsp;";
+            return 0;
         }
     }
-}
-
-function minefield_miss(x, y) {
-    // Scan surrounding cells for mines
-
-    $("#" + x+"_"+y).html(minefield_cell(x,y));
-
 }
