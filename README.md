@@ -1,3 +1,5 @@
+asdasd
+
 # jsminesweeper
 Simple JS Minesweeper Application
 
@@ -7,3 +9,4 @@ exercise for http://triplebyte.com/.
 This is a simple web based application.  Host the page statically on a browser.
 
 Here is a quick mod.
+Here is another quick mod
